@@ -144,6 +144,52 @@ details.note p{margin:0;padding:0 18px 14px}
   .next .btn{width:100%}
 }
 
+/* live_fix_1115：手机 segmented 一行拉满 */
+.tab.split .tl2 i{font-style:normal}
+@media (max-width:560px){
+  .tabs.fit{flex-wrap:nowrap}
+  .tabs.fit .tab{flex:1 1 0;min-width:0;padding-left:4px;padding-right:4px}
+  .tab.split{flex-direction:column;align-items:center;gap:2px}
+  .tab.split .tl2{font-size:12px;font-weight:600;opacity:.8}
+  .tab.split .tl2 i{display:none}
+}
+
+/* 首屏 KPI（同对内页 .kpi 规格）*/
+.gain{margin:28px 0 0}
+.gain-h{font-family:var(--head);font-weight:700;font-size:13px;color:var(--faint);margin:0 0 8px}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.kpi{background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:20px 20px}
+.kpi .rk{font-family:var(--head);font-weight:700;font-size:12px;color:var(--faint)}
+.kpi .kv{font-family:var(--head);font-weight:700;font-size:34px;letter-spacing:-.02em;line-height:1.05;margin:8px 0;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* 大数字加 MXN 后，三栏卡在桌面 34px 会裁切；28px 仍在规范 28–44 内 */
+.kpi .kv{font-size:28px}
+.kpi.top .kv{color:var(--el)}
+.kpi .kn{font-size:15.5px;font-weight:700;line-height:1.4}
+.kpi .kd{font-size:13px;color:var(--faint);margin-top:2px}
+/* 切换前的小标签（同对内页 .ctl）*/
+.ctl{display:flex;align-items:center;gap:8px}
+.ctl>span{font-size:12.5px;color:var(--faint);white-space:nowrap}
+.vipsel .ctl>span{min-width:3.6em}
+@media (max-width:860px){
+  .kpis{grid-template-columns:1fr;gap:8px}
+  .kpi{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 16px;padding:12px 16px}
+  .kpi .rk{grid-column:1}
+  .kpi .kv{grid-column:2;grid-row:1 / span 3;font-size:26px;margin:0}
+  .kpi .kn,.kpi .kd{grid-column:1}
+  .kpi .kn{font-size:14.5px}
+}
+@media (max-width:560px){
+  .gain{margin-top:20px}
+  .kpi .kv{font-size:22px}
+  .ctl{flex-direction:column;align-items:stretch;gap:8px}
+  .ctl .tabs{width:100%}
+  /* 表格：表头可换行、边距收窄，关键栏在 375 宽内 */
+  th,th.r{white-space:normal;line-height:1.3}
+  th,td{padding-left:8px;padding-right:8px}
+  .wheelt td:first-child{white-space:normal;min-width:7.5em}
+  .wheelt td:nth-child(2){white-space:nowrap}
+  .vipsel .tabs .tab{min-height:44px;align-items:center}
+}
 </style>
 </head>
 <body>
@@ -296,11 +342,14 @@ const TABLES = {
   WHEEL: (t) => ({ cols: ["条件（昨日 + 今日，MXN）", "奖品", "金额（MXN）"], al: "llr", rows: D.WHEEL.map((w) => [w.cond[t], w.prize, w.amt[t]]) }),
 };
 
+// 「Lucky · VIP2+」这类标签：手机上拆成两行，文字不变
+const tl = (l) => { const p = String(l).split(" · "); return p.length === 2 ? '<span class="tl1">' + esc(p[0]) + '</span><span class="tl2"><i> · </i>' + esc(p[1]) + '</span>' : esc(l); };
 const tabs = (size, opts, val, act, aria) => '<div class="tabs ' + size + '" role="tablist" aria-label="' + esc(aria) + '">' + opts.map((o) =>
-  '<button class="tab" role="tab" aria-selected="' + (o.value === val) + '" data-act="' + act + '" data-v="' + esc(o.value) + '">' + esc(o.label) + (o.count != null ? '<span class="ct">' + o.count + '</span>' : '') + '</button>').join("") + '</div>';
+  '<button class="tab' + (String(o.label).indexOf(" · ") > 0 ? " split" : "") + '" role="tab" aria-selected="' + (o.value === val) + '" data-act="' + act + '" data-v="' + esc(o.value) + '">' + tl(o.label) + (o.count != null ? '<span class="ct">' + o.count + '</span>' : '') + '</button>').join("") + '</div>';
 const table = (t) => '<div class="tw"><table><thead><tr>' + t.cols.map((c, i) => '<th class="' + (t.al[i] === "r" ? "r" : "") + '">' + esc(c) + '</th>').join("") + '</tr></thead><tbody>' +
   t.rows.map((r) => '<tr>' + r.map((c, i) => '<td class="' + (t.al[i] === "r" ? "r" : "") + '">' + esc(c) + '</td>').join("") + '</tr>').join("") + '</tbody></table></div>';
 const facts = (ms) => '<div class="facts">' + ms.map((m) => '<div class="fact"><div class="v">' + esc(m.value) + '</div><div class="l">' + esc(m.label) + '</div>' + (m.detail ? '<div class="d">' + esc(m.detail) + '</div>' : '') + '</div>').join("") + '</div>';
+const ctl = (label, inner) => '<div class="ctl"><span>' + esc(label) + '</span>' + inner + '</div>';
 const val = (v) => (v === "@PAGE_RULE" ? D.PAGE_RULE : v);
 const props = (items) => '<dl class="props">' + items.map(([l, v]) => '<dt>' + esc(l) + '</dt><dd class="' + (l === "奖励" ? "rw" : "") + '">' + esc(val(v)) + '</dd>').join("") + '</dl>';
 const bullets = (items) => '<ul class="bl">' + items.map((x) => '<li>' + esc(x) + '</li>').join("") + '</ul>';
@@ -328,15 +377,28 @@ function block(b) {
   if (type === "table") return x === "A47" ? days(x) : table(TABLES[x]());
   if (type === "wheel") {
     const t = parseInt(S.tier, 10);
-    return tabs("lg", D.TIER_TABS, S.tier, "tier", "转盘档位") + '<div class="now">' + esc(D.TIER_NOW[t]) + "</div>" +
-      facts([{ value: D.TIER_VIP[t], label: "解锁等级" }, { value: "1 次", label: "每天免费转", detail: "0 时重置" }, { value: "1 倍", label: "打码", detail: "存款券 15 倍" }]) + table(TABLES.WHEEL(t));
+    return ctl("档位", tabs("lg fit", D.TIER_TABS, S.tier, "tier", "转盘档位")) + '<div class="now">' + esc(D.TIER_NOW[t]) + "</div>" +
+      facts([{ value: D.TIER_VIP[t], label: "解锁等级" }, { value: "1 次", label: "每天免费转", detail: "0 时重置" }, { value: "1 倍", label: "打码", detail: "存款券 15 倍" }]) + '<div class="wheelt">' + table(TABLES.WHEEL(t)) + '</div>';
   }
   return "";
 }
 
+// 首屏「我能拿多少」：数字全部取自上面 DATA 的现有表格（最小值–最大值），不另写数字
+function kpiRow() {
+  const G = (id) => D.groups.find((g) => g.id === id), A = (gid, aid) => G(gid).acts.find((a) => a.id === aid);
+  const lo = (a) => Math.min(...a), hi = (a) => Math.max(...a);
+  const p13 = D.T13.map((r) => r[1]), pay16 = D.T16.map((r) => r[1]);
+  const ks = [
+    { g: G("g1").name, v: lo(p13) + "%–" + hi(p13) + "%", n: A("g1", "a13").heading, d: "首充 " + int(D.T13[0][0]) + " MXN 起，每档有上限" },
+    { g: G("g2").name, v: m2(lo(pay16)) + "–" + m2(hi(pay16)) + " MXN", n: A("g2", "a16").heading, d: "昨日亏损 " + int(D.T16[0][0]) + " MXN 起" },
+    { g: G("g3").name, v: lo(D.V27).toFixed(2) + "%–" + hi(D.V27).toFixed(2) + "%", n: A("g3", "a27").heading, d: "只返老虎机，" + D.LV[0] + " 起" },
+  ];
+  return '<div class="gain"><div class="gain-h">我能拿多少</div><div class="kpis">' + ks.map((k, i) => '<div class="kpi' + (i === 0 ? " top" : "") + '"><div class="rk">' + esc(k.g) + '</div><div class="kv">' + esc(k.v) + '</div><div class="kn">' + esc(k.n) + '</div><div class="kd">' + esc(k.d) + '</div></div>').join("") + '</div></div>';
+}
+
 function render() {
   const g = D.groups.find((x) => x.id === S.grp);
-  let h = '<section class="intro"><h1>' + esc(D.page.title) + '</h1><p class="summary">' + esc(D.page.summary) + '</p>' +
+  let h = '<section class="intro"><h1>' + esc(D.page.title) + '</h1><p class="summary">' + esc(D.page.summary) + '</p>' + kpiRow() +
     '<div class="chips">' + D.chips.map((c) => '<span class="chip">' + esc(c) + '</span>').join("") + '</div>' +
     '<p class="rgline">' + esc(D.notice.text.split("。")[0] + "。") + '</p>' +
     '<details class="note"' + (S.noteOpen ? " open" : "") + '><summary>' + esc(D.notice.lead) + '</summary><p>' + esc(D.notice.text.split("。").slice(1).join("。")) + '</p></details></section>';
@@ -345,8 +407,8 @@ function render() {
   if (g.vip) {
     const band = D.BANDS.find((b) => b.lv.indexOf(S.lv) >= 0) || D.BANDS[0];
     h += '<article class="act vipcard"><div class="act-h"><h3>' + esc(S.lv) + ' 能拿什么</h3><p>先选等级段，再选具体等级。</p></div><div class="vipsel">' +
-      tabs("lg", D.BANDS.map((b) => ({ value: b.value, label: b.label })), band.value, "band", "VIP 等级段") +
-      tabs("md", band.lv.map((l) => ({ value: l, label: l })), S.lv, "lv", "VIP 等级") + '</div>' + props(vipItems(S.lv)) + '</article>';
+      ctl("等级段", tabs("lg", D.BANDS.map((b) => ({ value: b.value, label: b.label })), band.value, "band", "VIP 等级段")) +
+      ctl("等级", tabs("md", band.lv.map((l) => ({ value: l, label: l })), S.lv, "lv", "VIP 等级")) + '</div>' + props(vipItems(S.lv)) + '</article>';
   }
   h += g.acts.map((a) => {
     const lead = a.blocks[0] && a.blocks[0][0] === "text" ? a.blocks[0][1] : "";

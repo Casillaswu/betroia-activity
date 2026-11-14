@@ -186,6 +186,32 @@ td.sub,th.sub{width:auto}
   table.ov td:first-child{min-width:108px}
   table:not(.ov):not(.rules) td{min-width:92px}}
 
+/* live_fix_1115：手机 segmented 一行拉满 */
+.tab.split .tl2 i{font-style:normal}
+@media (max-width:560px){
+  .tabs.fit{flex-wrap:nowrap}
+  .tabs.fit .tab{flex:1 1 0;min-width:0;padding-left:4px;padding-right:4px}
+  .tab.split{flex-direction:column;align-items:center;gap:2px}
+  .tab.split .tl2{font-size:12px;font-weight:600;opacity:.8}
+  .tab.split .tl2 i{display:none}
+}
+
+@media (max-width:560px){
+  table.mt .mh{display:none}
+  table.mt td{min-width:0}
+  table.mt th,table.mt th.r{white-space:normal;line-height:1.3}
+  table.mt th,table.mt td{padding-left:8px;padding-right:8px}
+  table.mt td:first-child{white-space:normal}
+  table.mt .pm span{display:block}
+  table.t13 td:first-child{min-width:6.5em}
+  table.cpn td:first-child{min-width:9em}
+  table.mt td.r{white-space:normal}
+  table.w5 td:first-child,table.t47d td:first-child,table.t47s td:first-child,table.items td:first-child{min-width:0}
+  .tabs.md .tab{min-height:44px;align-items:center}
+  .detail-tabs .tabs.md{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%}
+  .detail-tabs .tabs.md::-webkit-scrollbar{display:none}
+  .detail-tabs .tabs.md .tab{flex:0 0 auto;min-width:auto;min-height:44px;align-items:center;padding-left:10px;padding-right:10px}
+}
 </style>
 </head>
 <body>
@@ -384,10 +410,21 @@ const netHi = (x) => x.sub - x.recLo;
 /* ============ 界面 ============ */
 const U = { s: { ...DEFAULTS }, ...DATA.UI_DEFAULTS };
 const esc = (v) => String(v).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+// 「Lucky · VIP2+」这类标签：手机上拆成两行，文字不变
+const tl = (l) => { const p = String(l).split(" · "); return p.length === 2 ? '<span class="tl1">' + esc(p[0]) + '</span><span class="tl2"><i> · </i>' + esc(p[1]) + '</span>' : esc(l); };
 const tabs = (size, opts, val, act, aria) => '<div class="tabs ' + size + '" role="tablist" aria-label="' + esc(aria) + '">' + opts.map((o) =>
-  '<button class="tab" role="tab" aria-selected="' + (o.value === val) + '" data-act="' + act + '" data-v="' + esc(o.value) + '">' + esc(o.label) + (o.count != null ? '<span class="ct">' + o.count + '</span>' : '') + '</button>').join("") + '</div>';
+  '<button class="tab' + (String(o.label).indexOf(" · ") > 0 ? " split" : "") + '" role="tab" aria-selected="' + (o.value === val) + '" data-act="' + act + '" data-v="' + esc(o.value) + '">' + tl(o.label) + (o.count != null ? '<span class="ct">' + o.count + '</span>' : '') + '</button>').join("") + '</div>';
 const table = (cols, al, rows, cls) => '<div class="tw"><table class="' + (cls || "") + '"><thead><tr>' + cols.map((c, i) => '<th class="' + (al[i] === "r" ? "r" : "") + '">' + esc(c) + '</th>').join("") + '</tr></thead><tbody>' +
   rows.map((r) => '<tr>' + r.map((c, i) => '<td class="' + (al[i] === "r" ? "r" : "") + '">' + esc(c) + '</td>').join("") + '</tr>').join("") + '</tbody></table></div>';
+// 手机版表格：hide 里的栏在手机上隐藏，内容以「表头 值」并到第一栏下方的小字（桌面不显示）
+const hd = (c) => String(c).replace(/（[^）]*）$/, "");
+const mtable = (cols, al, rows, cls, hide) => '<div class="tw"><table class="mt ' + cls + '"><thead><tr>' + cols.map((c, i) => '<th class="' + (al[i] === "r" ? "r" : "") + (hide.indexOf(i) >= 0 ? " mh" : "") + '">' + esc(c) + '</th>').join("") + '</tr></thead><tbody>' +
+  rows.map((r) => '<tr>' + r.map((c, i) => '<td class="' + (al[i] === "r" ? "r" : "") + (hide.indexOf(i) >= 0 ? " mh" : "") + '">' + esc(c) + (i === 0 ? '<small class="pm">' + hide.map((j) => '<span>' + esc(hd(cols[j]) + " " + r[j]) + '</span>').join("") + '</small>' : "") + '</td>').join("") + '</tr>').join("") + '</tbody></table></div>';
+// 只在渲染时改展示：后台道具名里的裸 $ 改成 MXN；不改 DATA
+const fmtItem = (s) => String(s).replace(/\$(\d+(?:\.\d+)?)\*(\d+)/g, "$1 MXN ×$2").replace(/\$(\d+(?:\.\d+)?)/g, "$1 MXN");
+// 手机宽度下「活动」切换用更短标签，桌面仍用 DATA.SHORT
+const ACT_TAB = { "13": "13 首充", "47": "47 签到", "94": "94 返现", "26": "26 APP", "28": "28 签到", "20": "20 扭蛋", "5": "5 转盘", "16": "16 亏损", "31": "31 升级", "27": "27 日返", "42": "42 周亏", "76": "76 体育", "25": "25 月薪" };
+const actLabel = (v) => (window.matchMedia("(max-width: 560px)").matches && ACT_TAB[v]) ? ACT_TAB[v] : SHORT[v];
 const facts = (ms) => '<div class="facts">' + ms.map((m) => '<div class="fact"><div class="v">' + esc(m.value) + '</div><div class="l">' + esc(m.label) + '</div>' + (m.detail ? '<div class="d">' + esc(m.detail) + '</div>' : '') + '</div>').join("") + '</div>';
 const bullets = (items) => '<ul class="bl">' + items.map((x) => '<li>' + esc(x) + '</li>').join("") + '</ul>';
 const P = (t) => "<p>" + esc(t) + "</p>";
@@ -452,25 +489,25 @@ function render() {
       lead(x, "所有人限时 48 小时，首充按档位送 10%–50%。" + x.scen + "，") + metricsOf(x) +
       (showCfg ? sel("调哪一档", "tier13", T13.min.map((v, i) => ({ value: String(i), label: v.toLocaleString("en-US") + " 档" })), U.tier13, true) : "") +
       (showCfg ? grid(3, inp("比例 %", "p13_" + ti) + inp("上限 MXN", "c13_" + ti) + inp("打码 倍", "w13_" + ti)) : "") +
-      table(["档位（MXN）", "比例", "上限（MXN）", "打码", "补贴（MXN，门槛 / 档内最多）", "净补贴（MXN，门槛 / 档内最多）"], "rrrrrr", T13.min.map((mn, i) => {
+      mtable(["档位（MXN）", "比例", "上限（MXN）", "打码", "补贴（MXN，门槛 / 档内最多）", "净补贴（MXN，门槛 / 档内最多）"], "rrrrrr", T13.min.map((mn, i) => {
         const p = n("p13_" + i) / 100, c = n("c13_" + i), w = n("w13_" + i);
         const lo = Math.min(mn * p, c), hi = c;
         return [mn.toLocaleString("en-US"), (p * 100).toFixed(0) + "%", f2(c), w + " 倍", f2(lo) + " / " + f2(hi), sg(lo - lo * w * hP) + " / " + sg(hi - hi * w * hS)];
-      })) +
+      }), "t13", [1, 2, 3]) +
       bullets(["没有设同设备、同 IP 和 KYC 限制，5,000 / 10,000 档也没设。", "档位按设计跳档：充 999 拿 199.80、充 1,000 拿 250.00；充 4,999 拿 600.00、充 5,000 拿 2,000.00；充 9,999 拿 2,000.00、充 10,000 拿 5,000.00。"]));
   } else if (act === "47") {
     const x = R("47");
     block = dsec("[47] 新人七日签到", "转盘按 lucky 每转期望算；71856 VIP 积分不折算成本；存款券按全局使用率和充值额算。",
       lead(x, "新用户存款后签到，每天 4 项道具。全勤 7 天，") + metricsOf(x) +
       (showCfg ? grid(3, inp("体育合计 MXN", "sp47") + inp("扭蛋 次", "g47") + inp("转盘 次", "w47")) : "") +
-      table(["天", "需充值（MXN）", "需投注（MXN）", "奖励"], "lrrl", [
+      mtable(["天", "需充值（MXN）", "需投注（MXN）", "奖励"], "lrrl", [
         ["D1", "10", "10", "71871 +20% 存款券、扭蛋×1、转盘×1、体育 5.00"], ["D2", "0", "10", "同 D1"],
         ["D3", "10", "10", "扭蛋×1、转盘×1、71856 VIP 积分 50、体育 5.00"], ["D4", "0", "10", "扭蛋×1、转盘×1、体育 5.00、71894 +10% 存款券"],
-        ["D5", "10", "10", "同 D3"], ["D6", "0", "10", "同 D3"], ["D7", "10", "10", "扭蛋×2、转盘×2、体育 10.00、71871 +20% 存款券"]]) +
-      table(["场景", "人均补贴（MXN）", "其中道具（MXN）", "其中存款券（MXN）", "净补贴（MXN）"], "lrrrr", [R("47"), R("47d1")].map((y, i) => {
+        ["D5", "10", "10", "同 D3"], ["D6", "0", "10", "同 D3"], ["D7", "10", "10", "扭蛋×2、转盘×2、体育 10.00、71871 +20% 存款券"]], "t47d", [1, 2]) +
+      mtable(["场景", "人均补贴（MXN）", "其中道具（MXN）", "其中存款券（MXN）", "净补贴（MXN）"], "lrrrr", [R("47"), R("47d1")].map((y, i) => {
         const cpn = i === 0 ? 3 * m.ev[0] + m.ev[1] : m.ev[0];
         return [y.scen, f2(y.sub), f2(y.sub - cpn), f2(cpn), rng(y.sub - y.recHi, y.sub - y.recLo)];
-      })) +
+      }), "t47s", [1, 2, 3]) +
       bullets(["后台奖励总价值写 177.00，是展示用的钩子，七天固定金额都是 0。", "全勤合计：体育免费投注 40.00，扭蛋 8 次，转盘 8 次，71871 三张（D1、D2、D7），71894 一张（只在 D4）。", "现行配置最后更新于墨西哥时间 11-09 23:12。"]));
   } else if (act === "94") {
     const x = R("94");
@@ -503,10 +540,10 @@ function render() {
   } else if (act === "5") {
     const t = Math.round(parseFloat(U.wheelTier)), x = R("5" + ["lucky", "super", "mega"][t]);
     block = dsec("[5] 幸运转盘", "按投注 / 充值要求都满足算；Evento Gacha 按扭蛋单抽期望，扭蛋又会出 lucky 转盘，两边联立求解。",
-      tabs("lg stack", tierOpts, U.wheelTier, "wheelTier", "转盘档位") + '<div style="height:18px"></div>' +
+      tabs("lg stack fit", tierOpts, U.wheelTier, "wheelTier", "转盘档位") + '<div style="height:18px"></div>' +
       lead(x, ["当前：Lucky 转盘（VIP2 起）", "当前：Super 转盘（VIP8 起）", "当前：Mega 转盘（VIP12 起）"][t] + "，每天免费 1 次") + metricsOf(x) +
       (showCfg ? grid(4, WHEEL.map((it, i) => inp(it[0] + " 权重", "ww" + i)).join("")) : "") +
-      table(["奖品", "权重", "面值（MXN）"], "lrr", WHEEL.map((it, i) => [it[0], s["ww" + i], it[1] === "c72" || it[1] === "c73" || it[1] === "g1" || it[1] === "g2" ? "—" : f2(it[2 + t])])) +
+      mtable(["奖品", "权重", "面值（MXN）"], "lrr", WHEEL.map((it, i) => [it[0], s["ww" + i], it[1] === "c72" || it[1] === "c73" || it[1] === "g1" || it[1] === "g2" ? "—" : f2(it[2 + t])]), "w5", [1]) +
       P("每转期望 " + f2(m.wheel[t]) + " MXN，其中现金 " + f2(m.cash[t]) + "、存款券 " + f2(m.wc) + "；权重合计 " + m.tot + "。") +
       bullets(["lucky VIP2 起，super VIP8 起，mega VIP12 起，三档权重相同、面额不同。", "转盘抽中的存款券（+10% 权重 100、+20% 权重 10）领取无门槛；三档发的是同一批 71872 / 71873。"]));
   } else if (act === "16") {
@@ -586,20 +623,20 @@ function render() {
     sub("存款券使用率", "默认是道具表的已使用 ÷ 已发放，显示 1 位小数，计算按原始精度。",
       grid(4, COUPONS.map((c, i) => field(c.tag + "（" + c.id + "）%", "u" + i, in1("u" + i))).join("")) +
       (showCfg ? grid(4, COUPONS.map((c, i) => '<div class="cfgbox"><h4>' + esc(c.tag + "（" + c.id + "）") + '</h4>' + inp("比例 %", "pct" + i) + '<div style="height:10px"></div>' + inp("上限 MXN", "cap" + i) + '<div style="height:10px"></div>' + inp("最低充值 MXN", "min" + i) + '<div style="height:10px"></div>' + inp("打码 倍", "cw" + i) + '</div>').join("")) : "")) +
-    sub("玩家充值额", "当前 " + f2(dep) + " MXN，用于首充落档和 4 张存款券。", tabs("md", depOpts, s.depMode, "depMode", "玩家充值额") + (s.depMode === "custom" ? '<div style="height:14px"></div>' + grid(3, inp("充值额 MXN", "depCustom")) : "")),
+    sub("玩家充值额", "当前 " + f2(dep) + " MXN，用于首充落档和 4 张存款券。", tabs("md fit", depOpts, s.depMode, "depMode", "玩家充值额") + (s.depMode === "custom" ? '<div style="height:14px"></div>' + grid(3, inp("充值额 MXN", "depCustom")) : "")),
     '<button class="btn" data-act="reset">恢复默认</button>');
 
   h += sec("detail", "分活动明细", "",
     '<div class="detail-tabs">' + tabs("xl", GROUPS.map((g, gi) => ({ value: String(gi), label: g.name, count: g.acts.length })), String(actGroup), "grp", "活动分组") +
-    tabs("md", GROUPS[actGroup].acts.map((a) => ({ value: a.value, label: SHORT[a.value] })), act, "act", "活动") + '</div>' +
+    tabs("md", GROUPS[actGroup].acts.map((a) => ({ value: a.value, label: actLabel(a.value) })), act, "act", "活动") + '</div>' +
     toggle("显示配置参数", "showCfg", showCfg) + block);
 
   h += sec("coupons", "存款券", "", P("签到券（71871、71894）在 [47] 用 71871 的打码倍数，转盘券（71872、71873）在 [5] 用 71872 的打码倍数。参数在「全局参数 → 存款券使用率」里改。") +
-    table(["券", "在哪发", "用掉时的奖励（MXN）", "打码", "使用率", "每发一张的期望（MXN）", "每发一张的净补贴（MXN）"], "llrrrrr", COUPONS.map((c, i) => {
+    mtable(["券", "在哪发", "用掉时的奖励（MXN）", "打码", "使用率", "每发一张的期望（MXN）", "每发一张的净补贴（MXN）"], "llrrrrr", COUPONS.map((c, i) => {
       const w = m.cp[i].wager, b = m.bonus[i], e = m.ev[i];
       return [c.tag + "（" + c.id + "）", c.where + "；" + c.games, f2(b), w + " 倍", pc(m.cp[i].usage), f2(e), rng(e - e * w * hS, e - e * w * hP)];
-    })));
-  h += sec("items", "券与道具对照", "来源：运营中心道具配置，已发放、已使用是累计数。道具打码都是 1 倍。", table(["ID", "名称", "是什么", "在哪发", "已发放（次）", "已使用（次）", "使用率"], "llllrrr", DATA.ITEMS));
+    }), "cpn", [1, 2, 3, 4]));
+  h += sec("items", "券与道具对照", "来源：运营中心道具配置，已发放、已使用是累计数。道具打码都是 1 倍。", mtable(["ID", "名称", "是什么", "在哪发", "已发放（次）", "已使用（次）", "使用率"], "llllrrr", DATA.ITEMS.map((r) => [r[0], fmtItem(r[1]), r[2], r[3], r[4], r[5], r[6]]), "items", [2, 3, 4, 5]));
   h += sec("rules", "规则说明", "跨活动的规则；单个活动的规则在分活动明细里。", table(["项目", "规则"], "ll", DATA.RULES, "rules"));
   h += sec("method", "公式", "", '<div class="method">' +
     P("理论回收 = 人均补贴 × 打码倍数 × 杀数；净补贴 = 人均补贴 − 理论回收；回收率 = 打码倍数 × 杀数。理论回收假设玩家把打码打满，只能拿来比较各活动谁更省钱，不是实际成本。") +
