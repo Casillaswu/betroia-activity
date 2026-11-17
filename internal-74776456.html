@@ -221,7 +221,7 @@ td.sub,th.sub{width:auto}
 /*CORE-START*/
 /* ============ 所有数据与默认参数：只改这里 ============ */
 const DATA = {
-  page: { title: "Betroia 线上活动一览与人均成本", summary: "改杀数、存款券使用率、玩家充值额和各活动的参数，人均补贴、理论回收和净补贴会跟着重算。" },
+  page: { title: "Betroia 线上活动一览与人均成本", summary: "更新于 2026-11-17。改杀数、存款券使用率、玩家充值额和各活动的参数，人均补贴、理论回收和净补贴会跟着重算。" },
   FX: 17.4245,
   COUPONS: [
     { id: "71871", name: "Depósito +20%", tag: "签到 +20%", where: "[47] D1、D2、D7", pct: 20, cap: 1000, min: 100, wager: 15, issued: 69436, used: 15053, games: "不限游戏" },
@@ -238,7 +238,7 @@ const DATA = {
   WHEEL_W: [100, 60, 30, 10, 80, 40, 100, 80, 40, 100, 10, 10],
   WHEEL_REQ: ["投注 ≥ 50", "投注 ≥ 200", "投注 ≥ 500，充值 ≥ 100", "投注 ≥ 1,500，充值 ≥ 300", "投注 ≥ 50", "投注 ≥ 200", "投注 ≥ 50", "投注 ≥ 50", "投注 ≥ 200", "无条件", "无条件", "投注 ≥ 200"],
   T13: { min: [100, 300, 500, 1000, 2000, 5000, 10000], pct: [10, 15, 20, 25, 30, 40, 50], cap: [20, 75, 200, 500, 600, 2000, 5000], wager: [20, 20, 20, 25, 25, 30, 30] },
-  T16: { loss: [50, 100, 150, 300, 500, 1000, 2000, 5000, 10000], pay: [3, 5, 7, 12, 17, 30, 57, 137, 250] },
+  T16: { loss: [50, 100, 150, 300, 500, 1000, 2000, 5000, 10000], pay: [3, 7, 7, 12, 17, 30, 57, 137, 250] },
   V31: [1, 2, 3, 5, 7, 10, 30, 100, 500, 1000, 5000, 10000, 50000, 100000], // VIP2–15
   V27: [0.2, 0.2, 0.2, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], // VIP2–15 %
   V27CAP: [1, 2, 3, 4, 5, 7, 10, 15, 30, 100, 500, 2000, 5000, 10000], // VIP2–15 最高领取 MXN
@@ -253,9 +253,9 @@ const DATA = {
     loss94: "500", pct94: "10", min94: "1", cap94: "50", w94: "5", days94: "3",
     tier16: "4", amt26: "5", w26: "1", vip31: "VIP5", w31: "5",
     vip27: "VIP2", bet27: "1000", vip42: "VIP3", loss42: "1000", vip76: "VIP4", bet76: "1000", vip25: "VIP5",
-    g28: "5", a28: "10",
+    g28: "5",
   },
-  UI_DEFAULTS: { sport28: false, act: "13", tier13: "0", wheelTier: "0", showCfg: false, cur: "MXN", sortBy: "group", pf: "all" },
+  UI_DEFAULTS: { act: "13", tier13: "0", wheelTier: "0", showCfg: false, cur: "MXN", sortBy: "group", pf: "all" },
   KEY_LABELS: {
     holdP: "平台杀数", holdS: "老虎机杀数", holdSp: "体育杀数",
     sp47: "[47] 体育合计", g47: "[47] 扭蛋次数", w47: "[47] 转盘次数",
@@ -263,7 +263,7 @@ const DATA = {
     loss94: "[94] 每天亏损", pct94: "[94] 比例", min94: "[94] 最低发放", cap94: "[94] 上限", w94: "[94] 打码", days94: "[94] 天数",
     tier16: "[16] 亏损档", amt26: "[26] 奖励", w26: "[26] 打码", vip31: "[31] 等级", w31: "[31] 打码",
     vip27: "[27] 等级", bet27: "[27] 老虎机投注", vip42: "[42] 等级", loss42: "[42] 上周亏损", vip76: "[76] 等级", bet76: "[76] 体育投注", vip25: "[25] 等级",
-    g28: "[28] 每日 Giros 面值", a28: "[28] 体育券面值",
+    g28: "[28] 每日 Giros 面值",
   },
   // 分组与顺序：新手福利 / 日常活动 / VIP 专属
   ORDER: ["13", "47", "47d1", "94", "26", "28", "20", "5lucky", "5super", "5mega", "16", "31", "27", "42", "76", "25"],
@@ -307,7 +307,10 @@ const DATA = {
     ["72232", "Apuesta Deportiva Gratis $10", "体育免费投注 10.00", "[47] D7", "—", "—", "—"],
     ["71856", "50 puntos VIP", "VIP 积分 50，不折算成本", "[47] D3、D5、D6", "—", "—", "—"],
     ["72243", "10 Giros Gratis", "免费旋转，按每次 0.50 估算", "[28] D1–D7", "—", "—", "—"],
-    ["72242", "Apuesta Deportiva ×10", "体育券；11-13 起对总代2删除", "[28] D1–D7", "—", "—", "—"],
+  ],
+  CHANGES: [
+    { d: "2026-11-17", t: "循环七日签到奖励改为每天 10 Giros Gratis，取消体育免费投注券" },
+    { d: "2026-11-17", t: "日亏损返现昨日亏损 100 档返现由 5.00 改为 7.00 MXN" },
   ],
 };
 /* ============ 数据结束 ============ */
@@ -340,8 +343,8 @@ function sg(n) { if (!isFinite(n)) return "—"; const v = Math.abs(n) < 0.005 ?
 function rng(a, b) { return Math.abs(a - b) < 0.005 ? sg(a) : sg(Math.min(a, b)) + " – " + sg(Math.max(a, b)); }
 function pc(n) { return (n * 100).toFixed(2) + "%"; }
 
-// 与 Canvas 相同的计算：s = 参数表，sport28 = 总代2 开关
-function compute(s, sport28) {
+// 与 Canvas 相同的计算：s = 参数表
+function compute(s) {
   const n = (k) => { const x = parseFloat(s[k]); return isFinite(x) ? x : parseFloat(DEFAULTS[k]); };
   const hP = n("holdP") / 100, hS = n("holdS") / 100, hSp = n("holdSp") / 100;
   const dep = s.depMode === "custom" ? n("depCustom") : parseFloat(s.depMode);
@@ -385,9 +388,8 @@ function compute(s, sport28) {
   const cw47 = n("cw0");
   mk("47", "[47] 新人七日签到", "全勤 7 天（道具 + 4 张券）", [{ v: n("sp47") + n("g47") * m.gacha + n("w47") * m.wheel[0], w: 1 }, { v: 3 * m.ev[0] + m.ev[1], w: cw47 }], "道具 1 倍；券 " + cw47 + " 倍");
   mk("47d1", "[47] 新人七日签到 D1", "D1 单日", [{ v: 5 + m.gacha + m.wheel[0], w: 1 }, { v: m.ev[0], w: cw47 }], "道具 1 倍；券 " + cw47 + " 倍");
-  const g28 = n("g28"), a28 = n("a28");
-  if (!sport28) mk("28", "[28] 循环七日签到", "全勤 7 天，每天免费旋转 + 体育券", [{ v: 7 * g28 + 7 * a28, w: 1, sport: true }], "1 倍");
-  else mk("28", "[28] 循环七日签到", "全勤 7 天，总代2（无体育券，每天免费旋转）", [{ v: 7 * g28, w: 1 }], "1 倍");
+  const g28 = n("g28");
+  mk("28", "[28] 循环七日签到", "全勤 7 天，每天 10 Giros Gratis", [{ v: 7 * g28, w: 1 }], "1 倍");
   mk("20", "[20] 扭蛋", "每天 " + n("draws") + " 抽", [{ v: n("draws") * m.gacha, w: 1 }], "1 倍");
   const cw5 = n("cw2");
   ["lucky", "super", "mega"].forEach((t, i) => mk("5" + t, "[5] 转盘 " + t, "每转（上限估算）", [{ v: m.wheel[i] - m.wc, w: 1 }, { v: m.wc, w: cw5 }], "1 倍；券 " + cw5 + " 倍"));
@@ -455,7 +457,7 @@ const sub = (heading, caption, inner) => '<div class="sub"><h3>' + esc(heading) 
 
 function render() {
   const s = U.s, showCfg = U.showCfg, cur = U.cur;
-  const C = compute(s, U.sport28), m = C.m, rowsAll = C.rowsAll, dep = C.dep, n = C.n, hP = C.hP, hS = C.hS;
+  const C = compute(s), m = C.m, rowsAll = C.rowsAll, dep = C.dep, n = C.n, hP = C.hP, hS = C.hS;
   const R = (k) => rowsAll.find((x) => x.key === k);
   const act = U.act;
   const actGroup = Math.max(0, GROUPS.findIndex((g) => g.acts.some((a) => a.value === act)));
@@ -471,7 +473,6 @@ function render() {
   const changed = [];
   Object.keys(DEFAULTS).forEach((k) => { if (k === "depMode" || k === "depCustom") return; if (s[k] !== DEFAULTS[k] && n(k) !== parseFloat(DEFAULTS[k]) || (isNaN(parseFloat(DEFAULTS[k])) && s[k] !== DEFAULTS[k])) changed.push(keyLabel(k) + " " + s[k]); });
   if (dep !== 100) changed.unshift("玩家充值额 " + f2(dep));
-  if (U.sport28) changed.push("[28] 总代2（无体育券）");
   const changedText = changed.length === 0 ? "全部为默认口径。" : "当前非默认参数 " + changed.length + " 项：" + changed.join("、") + "。";
 
   const pf = U.pf, sortBy = U.sortBy;
@@ -529,10 +530,10 @@ function render() {
       bullets(["同 IP、同设备各限 1，排除 23 个总代。", "11-11 实际 166 人领取，人均 0.287 USD，和设定一致。"]));
   } else if (act === "28") {
     const x = R("28");
-    block = dsec("[28] 循环七日签到", "每日 Giros 按每次 0.5 MXN 估算，合 5；体育券按每张 10 MXN 估算；第 1–7 天两项都发；含体育券时回收按体育杀数算。",
-      lead(x, x.scen + "，") + metricsOf(x) + toggle("总代2（无体育券）", "sport28", U.sport28) +
-      grid(2, inp("每日 Giros 面值 MXN", "g28") + inp("体育券面值 MXN", "a28")) +
-      bullets(["所有用户，每天投注 1 MXN、不用充值，漏签不清零，参与满 7 天重置。", "第 1–7 天每天都是 10 Giros Gratis（每次 0.50）和一张 Apuesta Deportiva ×10。", "11-13 起对总代2删除体育投注券，其他用户照旧。"]));
+    block = dsec("[28] 循环七日签到", "每日 10 Giros Gratis，按每次 0.50 MXN 估算，一天 5.00，全勤 7 天合计 35.00。回收按平台 / 老虎机杀数算。",
+      lead(x, x.scen + "，") + metricsOf(x) +
+      grid(2, inp("每日 Giros 面值 MXN", "g28")) +
+      bullets(["所有用户，每天投注 1 MXN、不用充值，漏签不清零，参与满 7 天重置。", "第 1–7 天每天都是 10 Giros Gratis（每次 0.50）。"]));
   } else if (act === "20") {
     const x = R("20");
     block = dsec("[20] 扭蛋活动", "单张卡按 50 ÷ 24 摊价：4 张普通卡 + 20 张换 1 张万能卡；随机金额按均值 3 MXN 算。",
@@ -556,7 +557,7 @@ function render() {
     block = dsec("[16] 日亏损返现", "",
       lead(x, "所有人，昨日亏损 ≥ 50 起返，9 档固定金额 3.00–250.00。" + x.scen + "，") + metricsOf(x) +
       grid(2, sel("昨日亏损档", "tier16", T16.loss.map((v, i) => ({ value: String(i), label: "亏 " + v.toLocaleString("en-US") + " 返 " + f2(T16.pay[i]) })), s.tier16)) +
-      bullets(["返的是门槛亏损的 2.5%–6%，打码 1 倍。"]));
+      bullets(["返的是门槛亏损的 2.5%–7%，打码 1 倍。"]));
   } else if (act === "31") {
     const x = R("31");
     block = dsec("[31] VIP 升级奖励", "",
@@ -640,7 +641,7 @@ function render() {
   let h = '<section class="intro"><h1>' + esc(DATA.page.title) + '</h1><p class="summary">' + esc(DATA.page.summary) + '</p>' +
     '<div class="kpis">' + kp.map((x, i) => '<div class="kpi' + (i === 0 ? " top" : "") + '"><div class="rk">TOP ' + (i + 1) + '</div><div class="kv">' + esc(sg(netHi(x))) + '</div><div class="kn">' + nm(x.name) + '</div><div class="kd">人均净补贴 MXN · ' + esc(PERIOD[x.key]) + '</div></div>').join("") + '</div>' +
     '<p class="headline">' + esc("按当前参数" + (pf === "all" ? "" : "，只看「" + pfName + "」周期") + "；各活动按自己的周期算，没有换算成统一周期。") + '</p></section>' +
-    '<nav class="toc" id="toc">' + [["净补贴排序", "bars"], ["总览", "overview"], ["全局参数", "params"], ["分活动明细", "detail"], ["存款券", "coupons"], ["券与道具对照", "items"], ["规则说明", "rules"], ["公式", "method"]].map(([l, id]) => '<a href="#' + id + '">' + esc(l) + '</a>').join("") + '</nav>';
+    '<nav class="toc" id="toc">' + [["净补贴排序", "bars"], ["总览", "overview"], ["全局参数", "params"], ["分活动明细", "detail"], ["存款券", "coupons"], ["券与道具对照", "items"], ["规则说明", "rules"], ["公式", "method"], ["变更记录", "log"]].map(([l, id]) => '<a href="#' + id + '">' + esc(l) + '</a>').join("") + '</nav>';
 
   h += sec("bars", "净补贴排序", "人均净补贴高端，从高到低，MXN；各活动周期不同，标在标签里，没有换算成统一周期。", barsHtml, ctl("周期", tabs("md", PF_OPTS, pf, "pf", "周期筛选")));
   h += sec("overview", "总览", "", P(changedText) +
@@ -675,7 +676,8 @@ function render() {
     P("理论回收 = 人均补贴 × 打码倍数 × 杀数；净补贴 = 人均补贴 − 理论回收；回收率 = 打码倍数 × 杀数。理论回收假设玩家把打码打满，只能拿来比较各活动谁更省钱，不是实际成本。") +
     P("存款券每发一张的期望 = 使用率 × MIN(充值额 × 比例, 上限)，充值不到最低额记 0。转盘每转 = Σ(权重 × 面值) ÷ 权重合计，Evento Gacha 按扭蛋单抽期望；扭蛋单抽 = (卡片权重 × 单张卡 + 随机金额权重 × 均值 + 转盘权重 × lucky 每转) ÷ 扭蛋权重合计，两式联立求解。") +
     P("配置来自 11-13 的后台截图转写；[47] 每日奖励按墨西哥时间 11-09 23:12 的系统配置。") + '</div>');
-  h += '<footer class="foot"><span>对内资料，不对玩家展示。</span></footer>';
+  h += sec("log", "变更记录", "最近在前。时间为墨西哥时间。", table(["日期", "内容"], "ll", DATA.CHANGES.map((c) => [c.d, c.t])));
+  h += '<footer class="foot"><span>对内资料，不对玩家展示。</span><span>更新于 2026-11-17</span></footer>';
 
   // 保留输入焦点与光标
   const ae = document.activeElement, fk = ae && ae.dataset ? ae.dataset.k : null, pos = fk && ae.selectionStart;
@@ -695,7 +697,7 @@ document.addEventListener("click", (e) => {
   const el = e.target.closest("[data-act]"); if (!el) return;
   const a = el.dataset.act, v = el.dataset.v;
   if (a === "tog") U[v] = !U[v];
-  else if (a === "reset") { U.s = { ...DEFAULTS }; U.sport28 = false; }
+  else if (a === "reset") { U.s = { ...DEFAULTS }; }
   else if (a === "grp") U.act = GROUPS[+v].acts[0].value;
   else if (a === "depMode") U.s = { ...U.s, depMode: v };
   else if (["act", "wheelTier", "cur", "sortBy", "pf"].indexOf(a) >= 0) U[a] = v;
