@@ -245,6 +245,27 @@ details.note p{margin:0;padding:0 16px 16px;color:var(--dim)}
   .wheelt td:first-child{white-space:normal;min-width:7.5em}
 }
 
+/* ===== 11-19 浅色版（只换配色，结构与文字不动）。配色取自已定稿的 渠道质量看板 浅色版（tools/channel_dashboard_template.html） ===== */
+:root{
+  --bg:#f4f6f9;--ink:#14181f;--el:#1f6feb;--gold:#8a5300;
+  --s1:#ffffff;--s2:#f2f4f7;--s3:#e9edf2;
+  --dim:#4a5363;--faint:#667085;--line:#e2e6ec;--line2:#cfd5de;
+  --hi:#eef2f7;--sunk:#f8fafc;--hover:#f5f8fc;
+  --el0:rgba(31,111,235,0);--el1:rgba(31,111,235,.07);--el2:rgba(31,111,235,.20);
+}
+body{background:var(--bg)}
+.bar{background:rgba(244,246,249,.96);border-top:3px solid #00bcf9;border-bottom:1px solid var(--line)}
+.bar img{background:#14181f;padding:4px 10px;border-radius:6px;box-sizing:content-box}
+.card,.door{box-shadow:0 1px 2px rgba(16,24,40,.05)}
+.door[aria-pressed=true]{background:#ffffff;border-color:var(--el)}
+.stage h1{color:#000}
+/* 第 2 轮：门卡 6 张（多了「厂商活动」） */
+.doors{grid-template-columns:repeat(6,minmax(0,1fr))}
+.door.d-vendor{border-style:dashed}
+@media (max-width:1100px){.door,.door:nth-child(4),.door:nth-child(5){grid-column:span 2}}
+@media (max-width:720px){.door,.door:nth-child(4),.door:nth-child(5){grid-column:auto}.door.d-vendor{grid-column:1 / -1}}
+@media (min-width:1101px){.door{padding:20px 16px;gap:4px 12px}.door .dn{font-size:20px}}
+
 </style>
 </head>
 <body>
@@ -253,7 +274,7 @@ details.note p{margin:0;padding:0 16px 16px;color:var(--dim)}
 <script>
 /* 以下 DATA 与计算函数从线上 index.html 原样复制，未改动 */
 const DATA = {
-  page: { title: "Betroia 活动明细", summary: "更新于 2026-11-17。平台现行活动的参加条件、奖励和打码要求。" },
+  page: { title: "Betroia 活动明细", summary: "更新于 2026-11-19。平台现行活动的参加条件、奖励和打码要求。" },
   notice: { lead: "阅读说明", text: "仅限 18 岁以上玩家参加，请理性娱乐、量力而行。文中时间都是墨西哥时间，金额都是 MXN；「0 时」指墨西哥时间 0 点。打码 N 倍，指完成奖励 × N 的有效投注后才能提现。存款券领取后 24 小时内有效。" },
   chips: ["18+", "墨西哥时间", "金额 MXN", "存款券 24 小时内有效"],
   footer: "活动规则以平台活动页面为准。",
@@ -298,19 +319,19 @@ const DATA = {
       { id: "a13", heading: "新首充 7 档", blocks: [
         ["text", "首次充值按金额落档加赠，各档比例和上限见下表。"],
         ["facts", [{ value: "100", label: "最低首充（MXN）" }, { value: "20–30 倍", label: "打码", detail: "按档位" }, { value: "48 小时", label: "有效期", detail: "倒计时结束后不能再参加" }]],
-        ["props", [["参加对象", "所有玩家，首次充值"], ["奖励", "按充值金额落档，送充值的 10%–50%，每档有上限"], ["适用游戏", "@PAGE_RULE"], ["领取端", "App、H5、PC"]]],
+        ["props", [["参加对象", "所有玩家，首次充值"], ["奖励", "按充值金额落档，送充值的 10%–50%，每档有上限"], ["适用游戏", "体育、老虎机、休闲、自研"], ["参与限制", "同 IP、同设备各限 1"], ["领取端", "App、H5、PC"]]],
         ["table", "T13"],
         ["text", "计算例子：充 999 落在 500 档，拿 199.80；充 1,000 落在 1,000 档，拿 250.00。"] ] },
       { id: "a47", heading: "新人七日签到", blocks: [
         ["text", "完成首次存款后连续签到 7 天，每天领 4 项道具。"],
         ["facts", [{ value: "10", label: "每天需投注（MXN）", detail: "第 1、3、5、7 天另需充值 10" }, { value: "1 倍", label: "道具打码", detail: "存款券 15 倍" }, { value: "0 时", label: "每天刷新签到", detail: "共 7 天" }]],
-        ["props", [["参加对象", "新用户，完成首次存款后可签到"], ["奖励", "每天 4 项道具：扭蛋、幸运转盘、体育免费投注，部分天数含存款券或 VIP 积分"], ["适用游戏", "不限游戏"], ["领取端", "App、H5；PC 不能签到"]]],
+        ["props", [["参加对象", "新用户，完成首次存款后可签到"], ["奖励", "每天 4 项道具：扭蛋、幸运转盘、体育免费投注，部分天数含存款券或 VIP 积分"], ["适用游戏", "体育、老虎机、休闲、自研"], ["参与限制", "同 IP、同设备各限 1"], ["领取端", "App、H5；PC 不能签到"]]],
         ["table", "A47"],
-        ["text", "存款券条款：+20% 存款券充值 100 起，最多送 1,000.00；+10% 存款券充值 50 起，最多送 500.00。两张都是 15 倍打码，不限游戏。"] ] },
+        ["text", "存款券条款：+20% 存款券充值 100 起，最多送 1,000.00；+10% 存款券充值 50 起，最多送 500.00。两张都是 15 倍打码，只限体育、老虎机、休闲、自研。"] ] },
       { id: "a94", heading: "新用户日亏损返现", blocks: [
         ["text", "注册后的前 3 天，按昨日亏损返现。"],
         ["facts", [{ value: "10.00", label: "昨日亏损起返（MXN）" }, { value: "5 倍", label: "打码" }, { value: "3 天", label: "有效期", detail: "每天 0 时按前 24 小时结算" }]],
-        ["props", [["参加对象", "活动开启后注册的新用户"], ["奖励", "返昨日亏损的 10%，最低 1.00，最多 50.00"], ["适用游戏", "@PAGE_RULE"], ["领取端", "App、H5、PC"], ["注意事项", "这 3 天内可以同时参加日常活动里的日亏损返现"]]],
+        ["props", [["参加对象", "活动开启后注册的新用户"], ["奖励", "返昨日亏损的 10%，最低 1.00，最多 50.00"], ["适用游戏", "体育、老虎机、休闲、自研"], ["参与限制", "同 IP、同设备各限 1"], ["领取端", "App、H5、PC"], ["注意事项", "这 3 天内可以同时参加日常活动里的日亏损返现"]]],
         ["text", "计算例子：昨日亏 300，返 30.00；昨日亏 800，按 10% 是 80.00，超过上限，返 50.00。"] ] },
       { id: "a26", heading: "APP 下载登录奖励", blocks: [
         ["text", "充值后下载 APP 并从 APP 登录，领一笔现金。"],
@@ -387,6 +408,19 @@ const DATA = {
         ["facts", [{ value: "50%", label: "串关投注赔率提升" }, { value: "5%", label: "指定投注赔率提升" }]],
         ["props", [["参加对象", "所有玩家"], ["奖励", "体育串关投注赔率提升 50%；体育指定投注赔率提升 5%"]]] ] },
     ] },
+    { id: "g5", name: "厂商活动", count: 2, vendor: true, lead: "由厂商出资和审核、奖金由厂商发放的活动，另计，不算在 16 个平台活动里。", acts: [
+      { id: "vpp", heading: "PP Carnaval Navideño / PP Christmas Carnival", blocks: [
+        ["text", "Pragmatic Play（PP）锦标赛 MEGA BOSS – CARNAVAL NAVIDEÑO，由厂商出资和审核。"],
+        ["facts", [{ value: "270,000", label: "奖池（MXN）" }, { value: "6 场", label: "锦标赛", detail: "每场 100 个获奖名次，共 600 个" }, { value: "11-19 – 12-31", label: "活动时间", detail: "2026 年，每天 00:00–23:59（UTC−6）" }]],
+        ["props", [["厂商", "Pragmatic Play（PP）"], ["出资与审核", "由厂商出资和审核。Pragmatic Play 可审查玩家活动、取消违规奖励，并可随时修改、暂停或取消活动"], ["参与方式", "按每场锦标赛期间在参与游戏里的总旋转次数排名，奖励游戏或免费旋转功能各算 1 次；没有最低投注要求；同分时先达到该分数的排前；排行榜在参与游戏内实时更新"], ["奖励", "每场第 1–100 名按奖金表发现金"], ["适用游戏", "20 款 PP 游戏，见下方清单"], ["游戏清单", "Gates of Olympus Xmas 1000、Gates of Olympus Super Scatter、Sweet Bonanza Xmas 2500、Joker's Jewels Hot、Sugar Rush Xmas、Aztec Gems Megaways、Sweet Bonanza Xmas、Super Joker、Big Bass Christmas Blast 1000、Gates of Olympus 2500、Joker's Jewels、Sweet Bonanza 1000、Gold Party、Gates of Olympus 1000、Joker's Jewels Cash、Sugar Rush Super Scatter、Aztec Gems、Sugar Rush 1000、Joker's Jewels Wild、Sugar Megarush"]]],
+        ["table", "VPP_SCHED"],
+        ["table", "VPP_PRIZE"] ] },
+      { id: "vtada", heading: "TADA JACKPOT", blocks: [
+        ["text", "TaDa Gaming 奖池活动，由厂商出资和审核；活动页写明奖池全部由 TaDa Gaming 赞助。"],
+        ["facts", [{ value: "20,000,000", label: "奖池（MXN）" }, { value: "1×–5×", label: "奖金倍数" }, { value: "11-13 – 11-30", label: "活动时间", detail: "2026 年，每天 00:00–23:59（GMT-6）" }]],
+        ["props", [["厂商", "TaDa Gaming"], ["出资与审核", "由厂商出资和审核"], ["参与方式", "活动期间玩任意 TaDa Gaming 游戏自动参加，不用报名；只算真钱余额的投注；每注要超过对应奖级的最低投注，才能触发该奖级"], ["奖励", "触发后由 TaDa Gaming 直接把奖金打进玩家账户；各奖级的基础奖金可按 1×–5× 放大"], ["适用游戏", "全部 TaDa Gaming 游戏"]]],
+        ["table", "VTADA"] ] },
+    ] },
   ],
 };
 /* ============ 数据结束 ============ */
@@ -417,6 +451,9 @@ const TABLES = {
   T603A: () => ({ cols: ["团队等级", "日投注流水（MXN）", "团队有效会员人数"], al: "rrr", rows: D.T603A.map((r) => [String(r[0]), int(r[1]), String(r[2])]) }),
   T603B: () => ({ cols: ["团队等级", "一级返佣", "二级返佣", "三级返佣"], al: "rrrr", rows: D.T603B.map((r) => [String(r[0]), r[1].toFixed(2) + "%", r[2].toFixed(2) + "%", r[3].toFixed(2) + "%"]) }),
   T605: () => ({ cols: ["角色", "奖励（MXN）", "打码", "每日次数上限"], al: "lrrr", rows: [["邀请人", m2(100), "8 倍", "10"], ["被邀请人", m2(50), "10 倍", "—"]] }),
+  VPP_SCHED: () => ({ cols: ["场次", "日期（2026，UTC−6）", "奖池（MXN）"], al: "llr", rows: [["1", "11-19 – 11-25", "40,000"], ["2", "11-26 – 12-02", "40,000"], ["3", "12-03 – 12-09", "40,000"], ["4", "12-10 – 12-16", "40,000"], ["5", "12-17 – 12-23", "50,000"], ["6", "12-24 – 12-31", "60,000"], ["合计", "", "270,000"]] }),
+  VPP_PRIZE: () => ({ cols: ["名次", "第 1–4 场（MXN/人）", "第 5 场", "第 6 场"], al: "lrrr", rows: [["第 1 名", "6,500", "8,000", "9,600"], ["第 2 名", "3,500", "4,500", "5,500"], ["第 3 名", "2,500", "3,000", "3,500"], ["第 4–5 名（2 人）", "1,500", "2,000", "2,400"], ["第 6–10 名（5 人）", "800", "900", "1,080"], ["第 11–20 名（10 人）", "330", "450", "540"], ["第 21–50 名（30 人）", "240", "300", "360"], ["第 51–100 名（50 人）", "200", "250", "300"], ["每场合计（100 人）", "40,000", "50,000", "60,000"]] }),
+  VTADA: () => ({ cols: ["奖级", "基础奖金（MXN）", "单注需超过（MXN）"], al: "lrr", rows: [["MINI", "200", "4"], ["MINOR", "1,000", "10"], ["MAJOR", "10,000", "45"], ["GRAND", "50,000", "60"]] }),
   WHEEL: (t) => ({ cols: ["条件（昨日 + 今日，MXN）", "奖品", "金额（MXN）"], al: "llr", rows: D.WHEEL.map((w) => [w.cond[t], w.prize, w.amt[t]]) }),
 };
 
@@ -487,6 +524,8 @@ const CORE = {
   a603: () => "一级返佣 " + lo(D.T603B.map((r) => r[1])).toFixed(2) + "%–" + hi(D.T603B.map((r) => r[1])).toFixed(2) + "%",
   a605: () => "邀请人 " + m2(100) + " MXN，被邀请人 " + m2(50) + " MXN",
   aodds: () => "串关 +50%，指定投注 +5%",
+  vpp: () => "奖池 270,000 MXN，6 场锦标赛",
+  vtada: () => "奖池 20,000,000 MXN",
 };
 const CAP = {
   a13: () => "每档 " + m2(lo(D.T13.map((r) => r[2]))) + "–" + m2(hi(D.T13.map((r) => r[2]))) + " MXN",
@@ -509,6 +548,14 @@ const OV = ACTS.map((a) => ({ a, target: target(a), wager: wager(a), games: game
 
 // 变更记录：11-16 条目来自 11-14 与 11-16 两版页面数据逐项对比；其余来自运营活动变更记录（墨西哥时间）。只收现行 16 条活动相关的项
 const CHANGES = [
+  { d: "2026-11-19", id: "vpp", tag: "新增", t: "本页新增厂商活动区：PP Carnaval Navideño、TADA JACKPOT，由厂商出资和审核，不计入平台活动数" },
+  { d: "2026-11-19", id: "a47", tag: "范围", t: "存款券 +20%、+10% 适用游戏由不限游戏改为只限体育、老虎机、休闲、自研" },
+  { d: "2026-11-18", id: "a13", tag: "范围", t: "适用游戏由不限制改为只限体育、老虎机、休闲、自研（07:16）" },
+  { d: "2026-11-18", id: "a47", tag: "范围", t: "适用游戏由不限制改为只限体育、老虎机、休闲、自研（07:16）" },
+  { d: "2026-11-18", id: "a94", tag: "范围", t: "适用游戏由不限制改为只限体育、老虎机、休闲、自研（07:16）" },
+  { d: "2026-11-18", id: "a13", tag: "限制", t: "同 IP 参与数量限制、同设备参与限制由 0 改为 1（05:25）" },
+  { d: "2026-11-18", id: "a47", tag: "限制", t: "同 IP 参与数量限制、同设备参与限制由 0 改为 1（05:25）" },
+  { d: "2026-11-18", id: "a94", tag: "限制", t: "同 IP 参与数量限制、同设备参与限制由 0 改为 1（05:25）" },
   { d: "2026-11-17", id: "a16", tag: "奖励", t: "日亏损返现昨日亏损 100 档返现由 5.00 改为 7.00 MXN" },
   { d: "2026-11-17", id: "a28", tag: "奖励", t: "循环七日签到奖励改为每天 10 Giros Gratis，取消体育免费投注券" },
   { d: "2026-11-16", id: "a603", tag: "新增", t: "本页新增团队代理：团队等级 0–5，一级返佣 0.15%–1.20%，奖励打码 5 倍" },
@@ -576,7 +623,7 @@ function changelog() {
 /* ============ 活动目录（方向 A）渲染 ============ */
 // 方向 A 完整版：只读上方 DATA 与派生（OV / CHANGES / detail / vipTool / changelog），不新增数字或活动文案
 S.g = "g1"; S.q = ""; S.open = new Set();
-const N = ACTS.length;
+const N = ACTS.filter((a) => a.gid !== "g5").length, NV = ACTS.length - N, NA = ACTS.length;
 const searching = () => !!S.q.trim();
 const groupsShown = () => searching() || S.g === "all" ? D.groups : D.groups.filter((g) => g.id === S.g);
 const rowsOf = (g) => OV.filter((o) => o.a.gid === g.id && (!searching() || o.a.heading.toLowerCase().includes(S.q.trim().toLowerCase())));
@@ -601,13 +648,13 @@ function render() {
   document.getElementById("bartag").textContent = "合作方查阅 · " + UPD;
   const nLast = CHANGES.filter((c) => c.d === CHANGES[0].d).length;
   let h = '<section class="stage"><div class="st-in"><h1>Betroia 现行活动配置</h1><p class="meta">金额单位 MXN · 时间均为墨西哥时间 · <a href="#rules">口径说明</a> · <a href="#log">变更记录</a></p></div>' +
-    '<div class="stat"><div><span class="k">现行活动</span><span class="v">' + N + '</span></div><div><span class="k">最近更新</span><span class="v">' + esc(UPD.slice(5)) + '</span></div><a class="sl" href="#log"><span class="k">' + esc(CHANGES[0].d.slice(5)) + ' 变更项</span><span class="v">' + nLast + '</span></a></div></section>';
-  const doors = [{ id: "all", name: "全部", n: N, sub: D.groups.map((g) => g.name) }].concat(D.groups.map((g) => ({ id: g.id, name: g.name, n: g.acts.length, sub: g.acts.map((a) => a.heading) })));
-  h += '<nav class="doors" aria-label="按类型浏览">' + doors.map((x) => '<button class="door' + (x.id === "all" ? ' d-all' : '') + '" data-act="g" data-v="' + x.id + '" aria-pressed="' + (!searching() && x.id === S.g) + '">' +
+    '<div class="stat"><div><span class="k">平台活动</span><span class="v">' + N + '</span></div><div><span class="k">厂商活动（另计）</span><span class="v">' + NV + '</span></div><div><span class="k">最近更新</span><span class="v">' + esc(UPD.slice(5)) + '</span></div><a class="sl" href="#log"><span class="k">' + esc(CHANGES[0].d.slice(5)) + ' 变更项</span><span class="v">' + nLast + '</span></a></div></section>';
+  const doors = [{ id: "all", name: "全部", n: NA, sub: D.groups.map((g) => g.name) }].concat(D.groups.map((g) => ({ id: g.id, name: g.name, n: g.acts.length, sub: g.acts.map((a) => a.heading) })));
+  h += '<nav class="doors" aria-label="按类型浏览">' + doors.map((x) => '<button class="door' + (x.id === "all" ? ' d-all' : x.id === "g5" ? ' d-vendor' : '') + '" data-act="g" data-v="' + x.id + '" aria-pressed="' + (!searching() && x.id === S.g) + '">' +
     '<span class="dc">' + x.n + '</span><span class="dn">' + esc(x.name) + '</span><span class="dl">' + x.sub.map(esc).join(' / ') + '</span></button>').join("") + '</nav>';
   const rows = allRows(), allOpen = rows.length && rows.every((o) => S.open.has(o.a.id));
   h += '<div class="tool"><label class="srch"><span>搜索</span><input id="q" type="search" placeholder="活动名" value="' + esc(S.q) + '" autocomplete="off"></label>' +
-    '<span class="cnt">' + rows.length + ' / ' + N + ' 条</span><button class="btn" data-act="all" data-v="' + (allOpen ? "0" : "1") + '"' + (rows.length ? '' : ' disabled') + '>' + (allOpen ? "全部收起" : "全部展开") + '</button></div>';
+    '<span class="cnt">' + rows.length + ' / ' + NA + ' 条</span><button class="btn" data-act="all" data-v="' + (allOpen ? "0" : "1") + '"' + (rows.length ? '' : ' disabled') + '>' + (allOpen ? "全部收起" : "全部展开") + '</button></div>';
   h += '<div class="dir">' + (rows.length ? groupsShown().map(group).join("") : '<div class="empty">没有符合条件的活动。</div>') + '</div>';
   h += '<p class="hint">点一行展开该活动的完整档位、打码和门槛。「以活动页为准」表示这一项没有给出固定值，「—」表示数据里没有这一项。</p>';
   h += '<section class="card" id="rules"><div class="ch"><h2>口径说明</h2></div><div class="chips2">' + D.chips.map((c) => '<span class="chip">' + esc(c) + '</span>').join("") + '</div>' +

@@ -212,6 +212,25 @@ td.sub,th.sub{width:auto}
   .detail-tabs .tabs.md::-webkit-scrollbar{display:none}
   .detail-tabs .tabs.md .tab{flex:0 0 auto;min-width:auto;min-height:44px;align-items:center;padding-left:10px;padding-right:10px}
 }
+/* ===== 11-19 浅色版（只换配色，结构与文字不动）。配色取自已定稿的 渠道质量看板 浅色版（tools/channel_dashboard_template.html） ===== */
+:root{
+  --bg:#f4f6f9;--ink:#14181f;--el:#1f6feb;--gold:#8a5300;
+  --s1:#ffffff;--s2:#f2f4f7;
+  --dim:#4a5363;--faint:#667085;--line:#e2e6ec;--line2:#cfd5de;
+}
+.bar{background:rgba(244,246,249,.96);border-top:3px solid #00bcf9}
+.bar img{background:#14181f;padding:4px 10px;border-radius:6px;box-sizing:content-box}
+.toc{background:rgba(244,246,249,.96)}
+.toc a.on{color:#ffffff}
+.tabs.lg .tab[aria-selected=true],.tabs.md .tab[aria-selected=true],.tabs.sm .tab[aria-selected=true]{color:#ffffff}
+tbody tr:hover td{background:#f5f8fc}
+.kpi,.dblock,.note,.cfgbox{box-shadow:0 1px 2px rgba(16,24,40,.05)}
+.kpi.top{border-color:rgba(31,111,235,.45)}
+.fld select{background-image:linear-gradient(45deg,transparent 50%,#1f6feb 50%),linear-gradient(135deg,#1f6feb 50%,transparent 50%)}
+.tog[aria-pressed=true] i::after{background:#ffffff}
+.bfill{background:#c3cbd6}
+.hb{background:#e8f0fe}
+h1{color:#000}
 </style>
 </head>
 <body>
@@ -221,11 +240,11 @@ td.sub,th.sub{width:auto}
 /*CORE-START*/
 /* ============ 所有数据与默认参数：只改这里 ============ */
 const DATA = {
-  page: { title: "Betroia 线上活动一览与人均成本", summary: "更新于 2026-11-17。改杀数、存款券使用率、玩家充值额和各活动的参数，人均补贴、理论回收和净补贴会跟着重算。" },
+  page: { title: "Betroia 线上活动一览与人均成本", summary: "更新于 2026-11-19。改杀数、存款券使用率、玩家充值额和各活动的参数，人均补贴、理论回收和净补贴会跟着重算。" },
   FX: 17.4245,
   COUPONS: [
-    { id: "71871", name: "Depósito +20%", tag: "签到 +20%", where: "[47] D1、D2、D7", pct: 20, cap: 1000, min: 100, wager: 15, issued: 69436, used: 15053, games: "不限游戏" },
-    { id: "71894", name: "Depósito +10%", tag: "签到 +10%", where: "[47] D4", pct: 10, cap: 500, min: 50, wager: 15, issued: 77262, used: 22496, games: "不限游戏" },
+    { id: "71871", name: "Depósito +20%", tag: "签到 +20%", where: "[47] D1、D2、D7", pct: 20, cap: 1000, min: 100, wager: 15, issued: 69436, used: 15053, games: "只限体育、老虎机、休闲、自研" },
+    { id: "71894", name: "Depósito +10%", tag: "签到 +10%", where: "[47] D4", pct: 10, cap: 500, min: 50, wager: 15, issued: 77262, used: 22496, games: "只限体育、老虎机、休闲、自研" },
     { id: "71872", name: "Depósito +10%", tag: "转盘 +10%", where: "[5] 三档转盘", pct: 10, cap: 1000, min: 100, wager: 15, issued: 833841, used: 99448, games: "只算老虎机" },
     { id: "71873", name: "Depósito +20%", tag: "转盘 +20%", where: "[5] 三档转盘", pct: 20, cap: 2000, min: 150, wager: 15, issued: 80990, used: 5354, games: "只算老虎机" },
   ],
@@ -280,10 +299,10 @@ const DATA = {
   SHORT: { "13": "[13] 首充", "47": "[47] 新人签到", "94": "[94] 新用户返现", "26": "[26] APP 下载", "28": "[28] 循环签到", "20": "[20] 扭蛋", "5": "[5] 转盘", "16": "[16] 日亏损", "31": "[31] 升级", "27": "[27] 日返利", "42": "[42] 周亏损", "76": "[76] 体育周", "25": "[25] 月工资", "603": "[603] 团队代理", "605": "[605] 双向邀请", "odds": "体育赔率提升", "slotweek": "老虎机周竞标赛", "rgday": "RG 厂商日比赛" },
   GROUP_OF: { "13": 0, "47": 0, "47d1": 0, "94": 0, "26": 0 },
   RULES: [
-    ["存款券", "签到券 71871、71894 打码 15 倍、不限游戏；转盘券 71872、71873 打码 15 倍、只算老虎机。四张券都在领取后 24 小时过期，发到本金钱包，使用优先级低于活动。"],
+    ["存款券", "签到券 71871、71894 打码 15 倍、只限体育、老虎机、休闲、自研；转盘券 71872、71873 打码 15 倍、只算老虎机。四张券都在领取后 24 小时过期，发到本金钱包，使用优先级低于活动。"],
     ["领取端", "[16]、[76]、[28] 没勾领取端，不限制，App、H5、PC 都能领。[47]、[31]、[25]、[26] 可在 App、H5 领取，PC 用户不能签到 / 领取。[13]、[94]、[20]、[5] 可在 App、H5、PC 领取。"],
     ["新用户返现叠加", "[94] 和 [16] 对新用户同时生效。[16] 注册满 0 天就能参加，没有期限；[94] 只在注册后 3 天内有效。"],
-    ["适用游戏", "[20]、[5]、[47]、[31]、[42] 不限游戏；[76] 只算体育。"],
+    ["适用游戏", "[20]、[5]、[31]、[42] 不限游戏；[13]、[47]、[94] 只限体育、老虎机、休闲、自研；[76] 只算体育。"],
     ["风控与 KYC", "[94]、[31]、[25] 只排除无优惠（风控）标签，没有排除批量套利会员；其余活动两类都排除。截图里的活动 KYC 领取都关着。"],
   ],
   ITEMS: [
@@ -308,7 +327,15 @@ const DATA = {
     ["71856", "50 puntos VIP", "VIP 积分 50，不折算成本", "[47] D3、D5、D6", "—", "—", "—"],
     ["72243", "10 Giros Gratis", "免费旋转，按每次 0.50 估算", "[28] D1–D7", "—", "—", "—"],
   ],
+  VENDORS: [
+    { name: "PP Carnaval Navideño / PP Christmas Carnival", rows: [["厂商", "Pragmatic Play（PP）"], ["奖池", "MXN 270,000；6 场锦标赛，每场 100 个获奖名次，共 600 个（第 1–4 场各 40,000，第 5 场 50,000，第 6 场 60,000）"], ["起止日期", "2026-11-19 – 2026-12-31，每天 00:00–23:59（UTC−6）"], ["参与方式", "按每场锦标赛期间在参与游戏里的总旋转次数排名，奖励游戏或免费旋转功能各算 1 次；没有最低投注要求；每场第 1–100 名按奖金表发现金"], ["适用游戏", "20 款 PP 游戏：Gates of Olympus Xmas 1000、Gates of Olympus Super Scatter、Sweet Bonanza Xmas 2500、Joker's Jewels Hot、Sugar Rush Xmas、Aztec Gems Megaways、Sweet Bonanza Xmas、Super Joker、Big Bass Christmas Blast 1000、Gates of Olympus 2500、Joker's Jewels、Sweet Bonanza 1000、Gold Party、Gates of Olympus 1000、Joker's Jewels Cash、Sugar Rush Super Scatter、Aztec Gems、Sugar Rush 1000、Joker's Jewels Wild、Sugar Megarush"], ["出资与审核", "由厂商出资和审核；Pragmatic Play 可审查玩家活动、取消违规奖励，并可随时修改、暂停或取消活动"], ["成本", "厂商出资，不计平台成本"]] },
+    { name: "TADA JACKPOT", rows: [["厂商", "TaDa Gaming"], ["奖池", "MXN 20,000,000；奖级 MINI 200、MINOR 1,000、MAJOR 10,000、GRAND 50,000（基础奖金，可按 1×–5× 放大），单注需分别超过 4、10、45、60"], ["起止日期", "2026-11-13 – 2026-11-30，每天 00:00–23:59（GMT-6）"], ["参与方式", "活动期间玩任意 TaDa Gaming 游戏自动参加，不用报名；只算真钱余额的投注；触发后由 TaDa Gaming 直接把奖金打进玩家账户"], ["适用游戏", "全部 TaDa Gaming 游戏"], ["出资与审核", "由厂商出资和审核；活动页写明奖池全部由 TaDa Gaming 赞助"], ["成本", "厂商出资，不计平台成本"]] },
+  ],
   CHANGES: [
+    { d: "2026-11-19", t: "本页新增厂商活动区：PP Carnaval Navideño、TADA JACKPOT，由厂商出资和审核，不计平台成本" },
+    { d: "2026-11-19", t: "新人七日签到存款券 71871（+20%）、71894（+10%）适用游戏由不限游戏改为只限体育、老虎机、休闲、自研" },
+    { d: "2026-11-18", t: "新首充 7 档、新人七日签到、新用户日亏损返现：适用游戏由不限制改为只限体育、老虎机、休闲、自研（07:16）" },
+    { d: "2026-11-18", t: "新首充 7 档、新人七日签到、新用户日亏损返现：同 IP 参与数量限制、同设备参与限制由 0 改为 1（05:25）" },
     { d: "2026-11-17", t: "循环七日签到奖励改为每天 10 Giros Gratis，取消体育免费投注券" },
     { d: "2026-11-17", t: "日亏损返现昨日亏损 100 档返现由 5.00 改为 7.00 MXN" },
   ],
@@ -500,7 +527,7 @@ function render() {
         const lo = Math.min(mn * p, c), hi = c;
         return [mn.toLocaleString("en-US"), (p * 100).toFixed(0) + "%", f2(c), w + " 倍", f2(lo) + " / " + f2(hi), sg(lo - lo * w * hP) + " / " + sg(hi - hi * w * hS)];
       }), "t13", [1, 2, 3]) +
-      bullets(["没有设同设备、同 IP 和 KYC 限制，5,000 / 10,000 档也没设。", "档位按设计跳档：充 999 拿 199.80、充 1,000 拿 250.00；充 4,999 拿 600.00、充 5,000 拿 2,000.00；充 9,999 拿 2,000.00、充 10,000 拿 5,000.00。"]));
+      bullets(["同 IP、同设备各限 1（11-18 起）；没有设 KYC 限制。适用游戏只限体育、老虎机、休闲、自研。", "档位按设计跳档：充 999 拿 199.80、充 1,000 拿 250.00；充 4,999 拿 600.00、充 5,000 拿 2,000.00；充 9,999 拿 2,000.00、充 10,000 拿 5,000.00。"]));
   } else if (act === "47") {
     const x = R("47");
     block = dsec("[47] 新人七日签到", "转盘按 lucky 每转期望算；71856 VIP 积分不折算成本；存款券按全局使用率和充值额算。",
@@ -514,14 +541,14 @@ function render() {
         const cpn = i === 0 ? 3 * m.ev[0] + m.ev[1] : m.ev[0];
         return [y.scen, f2(y.sub), f2(y.sub - cpn), f2(cpn), rng(y.sub - y.recHi, y.sub - y.recLo)];
       }), "t47s", [1, 2, 3]) +
-      bullets(["后台奖励总价值写 177.00，是展示用的钩子，七天固定金额都是 0。", "全勤合计：体育免费投注 40.00，扭蛋 8 次，转盘 8 次，71871 三张（D1、D2、D7），71894 一张（只在 D4）。", "现行配置最后更新于墨西哥时间 11-09 23:12。"]));
+      bullets(["后台奖励总价值写 177.00，是展示用的钩子，七天固定金额都是 0。", "全勤合计：体育免费投注 40.00，扭蛋 8 次，转盘 8 次，71871 三张（D1、D2、D7），71894 一张（只在 D4）。", "每日奖励配置最后更新于墨西哥时间 11-09 23:12。", "同 IP、同设备各限 1（11-18 起）；适用游戏只限体育、老虎机、休闲、自研（11-18 起）。"]));
   } else if (act === "94") {
     const x = R("94");
     block = dsec("[94] 新用户日亏损返现", "每天亏损是假设值，连续 3 天都按同一个数算。",
       lead(x, "新用户前 3 天，昨日亏损 ≥ 10 返 10%，最低 1.00、最多 50.00。" + x.scen + "，") + metricsOf(x) +
       grid(2, inp("每天亏损 MXN", "loss94")) +
       (showCfg ? grid(3, inp("比例 %", "pct94") + inp("最低 MXN", "min94") + inp("上限 MXN", "cap94") + inp("打码 倍", "w94") + inp("天数", "days94")) : "") +
-      bullets(["只有一档，打码 5 倍，适用游戏 4 类。", "它是 ID 68 的子项，11/06 02:08 关、11/10 01:19 重开，重开后不重新起算，持续累积。"]));
+      bullets(["只有一档，打码 5 倍，适用游戏 4 类：体育、老虎机、休闲、自研。", "同 IP、同设备各限 1（11-18 起）。", "它是 ID 68 的子项，11/06 02:08 关、11/10 01:19 重开，重开后不重新起算，持续累积。"]));
   } else if (act === "26") {
     const x = R("26");
     block = dsec("[26] APP 下载登录奖励", "",
@@ -641,7 +668,7 @@ function render() {
   let h = '<section class="intro"><h1>' + esc(DATA.page.title) + '</h1><p class="summary">' + esc(DATA.page.summary) + '</p>' +
     '<div class="kpis">' + kp.map((x, i) => '<div class="kpi' + (i === 0 ? " top" : "") + '"><div class="rk">TOP ' + (i + 1) + '</div><div class="kv">' + esc(sg(netHi(x))) + '</div><div class="kn">' + nm(x.name) + '</div><div class="kd">人均净补贴 MXN · ' + esc(PERIOD[x.key]) + '</div></div>').join("") + '</div>' +
     '<p class="headline">' + esc("按当前参数" + (pf === "all" ? "" : "，只看「" + pfName + "」周期") + "；各活动按自己的周期算，没有换算成统一周期。") + '</p></section>' +
-    '<nav class="toc" id="toc">' + [["净补贴排序", "bars"], ["总览", "overview"], ["全局参数", "params"], ["分活动明细", "detail"], ["存款券", "coupons"], ["券与道具对照", "items"], ["规则说明", "rules"], ["公式", "method"], ["变更记录", "log"]].map(([l, id]) => '<a href="#' + id + '">' + esc(l) + '</a>').join("") + '</nav>';
+    '<nav class="toc" id="toc">' + [["净补贴排序", "bars"], ["总览", "overview"], ["全局参数", "params"], ["分活动明细", "detail"], ["厂商活动", "vendor"], ["存款券", "coupons"], ["券与道具对照", "items"], ["规则说明", "rules"], ["公式", "method"], ["变更记录", "log"]].map(([l, id]) => '<a href="#' + id + '">' + esc(l) + '</a>').join("") + '</nav>';
 
   h += sec("bars", "净补贴排序", "人均净补贴高端，从高到低，MXN；各活动周期不同，标在标签里，没有换算成统一周期。", barsHtml, ctl("周期", tabs("md", PF_OPTS, pf, "pf", "周期筛选")));
   h += sec("overview", "总览", "", P(changedText) +
@@ -665,6 +692,10 @@ function render() {
     tabs("md", GROUPS[actGroup].acts.map((a) => ({ value: a.value, label: actLabel(a.value) })), act, "act", "活动") + '</div>' +
     toggle("显示配置参数", "showCfg", showCfg) + block);
 
+  h += sec("vendor", "厂商活动", "由厂商出资和审核，奖金由厂商发放。内容取自 11-18 前台活动页。",
+    '<div class="note" style="margin-top:0"><b>厂商出资，不计平台成本</b>这两个活动不算人均成本，不进净补贴排序、总览和 KPI。</div>' +
+    DATA.VENDORS.map((v) => sub(v.name, "", table(["项目", "内容"], "ll", v.rows, "rules"))).join("") +
+    sub("备注", "", bullets(["PP Carnaval Navideño 详情页法律声明里的活动名是「RANKING DE APUESTAS MENSUALES」，和标题对不上。", "TADA JACKPOT 详情页法律声明里的活动名是「RANKING DIARIO DE APUESTAS PROMOCIÓN」，同样和标题对不上。"])));
   h += sec("coupons", "存款券", "", P("签到券（71871、71894）在 [47] 用 71871 的打码倍数，转盘券（71872、71873）在 [5] 用 71872 的打码倍数。参数在「全局参数 → 存款券使用率」里改。") +
     mtable(["券", "在哪发", "用掉时的奖励（MXN）", "打码", "使用率", "每发一张的期望（MXN）", "每发一张的净补贴（MXN）"], "llrrrrr", COUPONS.map((c, i) => {
       const w = m.cp[i].wager, b = m.bonus[i], e = m.ev[i];
@@ -677,7 +708,7 @@ function render() {
     P("存款券每发一张的期望 = 使用率 × MIN(充值额 × 比例, 上限)，充值不到最低额记 0。转盘每转 = Σ(权重 × 面值) ÷ 权重合计，Evento Gacha 按扭蛋单抽期望；扭蛋单抽 = (卡片权重 × 单张卡 + 随机金额权重 × 均值 + 转盘权重 × lucky 每转) ÷ 扭蛋权重合计，两式联立求解。") +
     P("配置来自 11-13 的后台截图转写；[47] 每日奖励按墨西哥时间 11-09 23:12 的系统配置。") + '</div>');
   h += sec("log", "变更记录", "最近在前。时间为墨西哥时间。", table(["日期", "内容"], "ll", DATA.CHANGES.map((c) => [c.d, c.t])));
-  h += '<footer class="foot"><span>对内资料，不对玩家展示。</span><span>更新于 2026-11-17</span></footer>';
+  h += '<footer class="foot"><span>对内资料，不对玩家展示。</span><span>更新于 2026-11-19</span></footer>';
 
   // 保留输入焦点与光标
   const ae = document.activeElement, fk = ae && ae.dataset ? ae.dataset.k : null, pos = fk && ae.selectionStart;
